@@ -1,0 +1,89 @@
+/* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+}
+
+h2 {
+  font-size: 1.5em;
+  color: #333;
+}
+
+p {
+  font-size: 1em;
+  color: #555;
+}
+
+/* Button Styles */
+button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* Form Styles */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* Autocomplete List Styles */
+.autocomplete-items {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  z-index: 99;
+}
+
+.autocomplete-items li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.autocomplete-items li:hover {
+  background-color: #f0f0f0;
+}
+
+/* Nutrient Summary and Food List */
+#nutrient-summary,
+#food-list {
+  margin-top: 20px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#nutrient-summary p,
+#food-list h3 {
+  font-size: 1.2em;
+  color: #333;
+}
