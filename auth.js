@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(() => {
                     alert('User logged in successfully!');
                     loginForm.reset();
-                    showSignOutButton(); // Add this line
+                    showSignOutButton();
                     window.location.href = 'index.html';
                 })
                 .catch((error) => {

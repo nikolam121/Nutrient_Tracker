@@ -1,4 +1,3 @@
-/* General Styles */
 body {
   font-family: 'Arial', sans-serif;
   background-color: #f5f5f5;
@@ -16,7 +15,6 @@ p {
   color: #555;
 }
 
-/* Button Styles */
 button {
   background-color: #4CAF50;
   color: white;
@@ -32,7 +30,6 @@ button:hover {
   background-color: #45a049;
 }
 
-/* Form Styles */
 input[type="text"],
 input[type="number"],
 input[type="email"],
@@ -54,7 +51,6 @@ form {
   margin-bottom: 20px;
 }
 
-/* Autocomplete List Styles */
 .autocomplete-items {
   position: absolute;
   background-color: white;
@@ -72,7 +68,6 @@ form {
   background-color: #f0f0f0;
 }
 
-/* Nutrient Summary and Food List */
 #nutrient-summary,
 #food-list {
   margin-top: 20px;

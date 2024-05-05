@@ -2,7 +2,6 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.11.0/fireba
 import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js';
 import { getFirestore, doc, setDoc, deleteDoc, collection, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js';
 
-// Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAQWHFj2BSUyljt0Yzs2kraD2sqzuWl0r4",
     authDomain: "calorie-tracker-86995.firebaseapp.com",
@@ -16,7 +15,6 @@ const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
 
-// Sign out event listener
 document.getElementById('signout-btn').addEventListener('click', function () {
     signOut(auth).then(() => {
         console.log('User signed out');
@@ -27,15 +25,14 @@ document.getElementById('signout-btn').addEventListener('click', function () {
     });
 });
 
-// Document ready event listener
 document.addEventListener('DOMContentLoaded', function () {
     const searchInput = document.getElementById('search-input');
     const gramInput = document.getElementById('gram-input');
     const autocompleteList = document.getElementById('autocomplete-list');
     const foodList = document.getElementById('selected-foods');
     const searchForm = document.getElementById('search-form');
-    const appId = 'f0dfbb11'; // Edamam App ID
-    const appKey = '30eaed04d58b6609932339232bc70d89'; // Edamam App Key
+    const appId = 'f0dfbb11'; 
+    const appKey = '30eaed04d58b6609932339232bc70d89'; 
     let totalNutrients = {
         calories: 0,
         protein: 0,
@@ -43,12 +40,10 @@ document.addEventListener('DOMContentLoaded', function () {
         carbs: 0
     };
 
-    // Function to safely access a nutrient
     function getNutrient(nutrientObj, key) {
         return nutrientObj[key] || 0;
     }
 
-    // Function to display autocomplete results
     function displayAutocompleteResults(results) {
         autocompleteList.innerHTML = '';
         results.forEach(result => {
@@ -62,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Input event listener for search
     searchInput.addEventListener('input', function () {
         const input = this.value.trim();
         if (!input) {
@@ -92,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     });
 
-    // Add Food form submission event listener
+
     searchForm.addEventListener('submit', function (e) {
         e.preventDefault();
         const foodName = searchInput.value.trim();
@@ -111,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (data.hints && data.hints.length > 0) {
                     const nutrients = data.hints[0].food.nutrients;
                     addFoodToList(foodName, grams, nutrients);
-                    updateNutrientTotals(grams, nutrients); // Add the new item
+                    updateNutrientTotals(grams, nutrients); 
                 } else {
                     alert('Food not found');
                 }
@@ -121,27 +115,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('Error adding food');
             });
 
-        // Clear input fields
         searchInput.value = '';
         gramInput.value = '';
     });
 
-    // Function to add food to the list
     function addFoodToList(foodItem, grams, nutrients) {
         const li = document.createElement('li');
         li.textContent = `${grams}g of ${foodItem} - Remove`;
         li.onclick = function () {
-            subtractNutrientTotals(grams, nutrients); // Subtract the removed item
-            removeFoodFromUserProfile(foodItem); // Remove from Firestore
+            subtractNutrientTotals(grams, nutrients); 
+            removeFoodFromUserProfile(foodItem); 
             foodList.removeChild(li);
-            location.reload();// Remove from the front-end list
+            location.reload();
         };
         foodList.appendChild(li);
         saveFoodDataToUserProfile(foodItem, grams, nutrients);
 
     }
 
-    // Function to update nutrient totals
     function updateNutrientTotals(grams, nutrients) {
         totalNutrients.calories += (getNutrient(nutrients, 'ENERC_KCAL') * grams / 100);
         totalNutrients.protein += (getNutrient(nutrients, 'PROCNT') * grams / 100);
@@ -154,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('total-carbs').textContent = totalNutrients.carbs.toFixed(2) + ' g';
     }
 
-    // Function to subtract nutrient totals
     function subtractNutrientTotals(grams, nutrients) {
         totalNutrients.calories -= (getNutrient(nutrients, 'ENERC_KCAL') * grams / 100);
         totalNutrients.protein -= (getNutrient(nutrients, 'PROCNT') * grams / 100);
@@ -167,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('total-carbs').textContent = totalNutrients.carbs.toFixed(2) + ' g';
     }
 
-    // Function to save food data to user profile
     async function saveFoodDataToUserProfile(foodItem, grams, nutrients) {
         const user = auth.currentUser;
         if (!user) {
@@ -192,7 +181,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to remove food data from user profile
     async function removeFoodFromUserProfile(foodItem) {
         const user = auth.currentUser;
         if (!user) {
@@ -211,12 +199,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to load user food data
     function loadUserFoodData(userId) {
         const userFoodsRef = collection(db, `users/${userId}/foods`);
 
         onSnapshot(userFoodsRef, (snapshot) => {
-            foodList.innerHTML = ''; // Clear current list
+            foodList.innerHTML = ''; 
             snapshot.forEach((doc) => {
                 const data = doc.data();
                 console.log('Food data loaded:', data);
@@ -227,7 +214,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Auth state change event listener
     onAuthStateChanged(auth, user => {
         if (user) {
             console.log('User is logged in:', user.uid);
@@ -241,7 +227,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Event listener for clearing autocomplete list
     document.addEventListener('click', function (e) {
         if (e.target !== searchInput && e.target !== autocompleteList) {
             autocompleteList.innerHTML = '';
