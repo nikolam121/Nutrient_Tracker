@@ -1,31 +1,51 @@
-Calorie Tracker
-Calorie Tracker is a web application designed to help users monitor and manage their daily calorie intake effectively. Whether you're aiming to lose weight, maintain a healthy lifestyle, or simply keep track of your nutrition, Calorie Tracker provides a convenient solution for tracking your food consumption.
+# Calorie Tracker
 
-Key Features
-1. User Authentication
-Calorie Tracker offers secure user authentication powered by Firebase Authentication. Users can sign up for a new account or log in with existing credentials to access their personalized dashboard.
+A web app for logging food and tracking daily calorie and macronutrient intake. Search a food database, log portions by weight, and see running totals for calories, protein, fat, and carbohydrates.
 
-2. Food Search and Selection
-The application integrates with the Edamam API to provide a vast database of food items. Users can search for specific foods using the search bar, which offers autocomplete suggestions as they type. Once a food item is selected, users can specify the quantity in grams before adding it to their daily intake list.
+## Features
 
-3. Autocomplete Search
-Calorie Tracker includes an autocomplete search feature to enhance the user experience when searching for food items. As users type in the search bar to find a specific food item, the autocomplete functionality suggests relevant food items in real-time based on the input.
+- **Food search with autocomplete** — type a food name and pick from live suggestions backed by the Edamam food database. Requests are debounced so typing doesn't fire one call per keystroke.
+- **Portion-based logging** — enter an amount in grams; macros are calculated from the per-100g values returned by the API.
+- **Live totals** — calories, protein, fat, and carbs update as entries are added or removed.
+- **Works without an account** — the tracker is fully usable logged out (entries stay in the browser tab). Logging in carries those entries over to your account rather than discarding them.
+- **Saved history** — signed-in users have their entries stored per-user in Firebase Firestore and synced live across tabs.
+- **Responsive** — single-column layout on mobile, no horizontal scrolling at any width.
 
-4. Real-time Nutrient Calculation
-As users add food items to their intake list, Calorie Tracker dynamically calculates and displays the total calories, protein, fat, and carbohydrates consumed. This real-time nutrient summary helps users stay informed about their dietary intake throughout the day.
+## Tech stack
 
-5. Data Persistence and User Profiles
-User data, including intake history, is securely stored using Firebase Firestore. Each user has their own profile, allowing them to access their intake history.
+| Layer | Technology |
+| --- | --- |
+| Front end | HTML, CSS, vanilla JavaScript (ES modules) |
+| Auth | Firebase Authentication (email/password) |
+| Database | Firebase Firestore |
+| Food data | Edamam Food Database API |
 
-Technologies Used
-Firebase Authentication: Handles user authentication and authorization securely.
-Firebase Firestore: Stores user data, including intake history and user profiles.
-Edamam API: Provides access to an extensive food database and nutritional information and includes an autocomplete search feature.
-HTML/CSS/JavaScript: Front-end development technologies used to create the user interface and implement interactive features.
-Getting Started
-To get started with Calorie Tracker:
+## Running locally
 
-Clone the repository to your local machine.
-Open the HTML files in a web browser to run the application locally.
-Sign up for a new account or log in with existing credentials.
-Start tracking your food intake by searching for food items and adding them to your intake list.
+The app uses ES modules, so it needs to be served over HTTP rather than opened directly from the filesystem.
+
+```bash
+git clone https://github.com/nikolam121/Nutrient_Tracker.git
+cd Nutrient_Tracker
+python -m http.server 8000
+```
+
+Then open `http://localhost:8000`.
+
+## Configuration
+
+Firebase and Edamam credentials live in `config.js`.
+
+Because this is a static client-side app with no backend, any key it uses is visible to visitors. The Firebase web API key is designed to be public — access is controlled by Firestore security rules, not by hiding the key. The Edamam credentials are not, so keep them on a free-tier key and rotate them if the quota starts getting drained. Moving the food lookups behind a small backend proxy is the proper fix if this ever needs to scale.
+
+## Project structure
+
+```
+index.html    Tracker page
+main.js       Food search, entry state, totals, Firestore sync
+main.css      Shared styles and design tokens
+auth.html     Sign up / log in page
+auth.js       Firebase Authentication flows
+auth.css      Auth page layout
+config.js     Firebase and Edamam configuration
+```

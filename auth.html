@@ -2,37 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sign Up and Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in - Calorie Tracker</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%232f8f5b'/><path d='M16 7c5 4.5 7 8.5 7 11.5a7 7 0 0 1-14 0C9 15.5 11 11.5 16 7z' fill='white'/></svg>">
+    <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="auth.css">
 </head>
-<body>
+<body class="auth-page">
     <div class="auth-container">
-        <button id="back-button" class="back-button" onclick="window.location.href='index.html';">Back</button>
+        <a href="index.html" class="auth-back">&larr; Back to tracker</a>
 
         <form id="signup-form" class="auth-form">
-            <h2>Sign Up</h2>
+            <h1 class="auth-form__title">Sign up</h1>
+
             <label for="signup-email">Email</label>
-            <input id="signup-email" name="email" type="email" placeholder="Email" required>
-            
+            <input id="signup-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+
             <label for="signup-password">Password</label>
-            <input id="signup-password" name="password" type="password" placeholder="Password" required>
-            
-            <button type="submit">Sign Up</button>
-            <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+            <input id="signup-password" name="password" type="password" placeholder="At least 6 characters"
+                   autocomplete="new-password" minlength="6" required>
+
+            <button type="submit" class="btn btn--primary">Create account</button>
+            <p class="auth-form__switch">Already have an account? <a href="#" id="show-login">Log in</a></p>
         </form>
 
-        <form id="login-form" class="auth-form" style="display:none;">
-            <h2>Login</h2>
+        <form id="login-form" class="auth-form" hidden>
+            <h1 class="auth-form__title">Log in</h1>
+
             <label for="login-email">Email</label>
-            <input id="login-email" name="email" type="email" placeholder="Email" required>
-            
+            <input id="login-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+
             <label for="login-password">Password</label>
-            <input id="login-password" name="password" type="password" placeholder="Password" required>
-            
-            <button type="submit">Login</button>
-            <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
+            <input id="login-password" name="password" type="password" placeholder="Your password"
+                   autocomplete="current-password" required>
+
+            <button type="submit" class="btn btn--primary">Log in</button>
+            <p class="auth-form__switch">Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
         </form>
+
+        <p id="auth-message" class="message" role="status" hidden></p>
     </div>
+
     <script src="auth.js" type="module"></script>
 </body>
 </html>

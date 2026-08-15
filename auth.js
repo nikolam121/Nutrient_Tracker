@@ -1,92 +1,78 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js';
-import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js';
+import {
+    getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword
+} from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js';
+import { firebaseConfig } from './config.js';
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAQWHFj2BSUyljt0Yzs2kraD2sqzuWl0r4",
-    authDomain: "calorie-tracker-86995.firebaseapp.com",
-    projectId: "calorie-tracker-86995",
-    storageBucket: "calorie-tracker-86995.appspot.com",
-    messagingSenderId: "90649163295",
-    appId: "1:90649163295:web:d77755462ee0d542d6072a"
+const ERROR_TEXT = {
+    'auth/email-already-in-use': 'That email is already registered. Try logging in instead.',
+    'auth/invalid-email': 'That email address does not look valid.',
+    'auth/weak-password': 'Password must be at least 6 characters.',
+    'auth/invalid-credential': 'Email or password is incorrect.',
+    'auth/wrong-password': 'Email or password is incorrect.',
+    'auth/user-not-found': 'Email or password is incorrect.',
+    'auth/too-many-requests': 'Too many attempts. Wait a moment and try again.',
+    'auth/network-request-failed': 'Network problem. Check your connection and try again.'
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
 
-function showSignOutButton() {
-    const signOutButton = document.getElementById('signout-btn');
-    const loginSignupButton = document.getElementById('login-signup');
+const signupForm = document.getElementById('signup-form');
+const loginForm = document.getElementById('login-form');
+const showLoginLink = document.getElementById('show-login');
+const showSignupLink = document.getElementById('show-signup');
+const authMessage = document.getElementById('auth-message');
 
-    if (signOutButton && loginSignupButton) {
-        loginSignupButton.style.display = 'none';
-        signOutButton.style.display = 'block';
+function showMessage(text, isError = false) {
+    authMessage.textContent = text;
+    authMessage.classList.toggle('message--error', isError);
+    authMessage.hidden = !text;
+}
+
+function swapForms(showLogin) {
+    signupForm.hidden = showLogin;
+    loginForm.hidden = !showLogin;
+    showMessage('');
+}
+
+async function submitAuth(form, action, pendingText) {
+    const button = form.querySelector('button[type="submit"]');
+    const originalText = button.textContent;
+    const email = form.querySelector('input[type="email"]').value.trim();
+    const password = form.querySelector('input[type="password"]').value;
+
+    button.disabled = true;
+    button.textContent = pendingText;
+    showMessage('');
+
+    try {
+        await action(auth, email, password);
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Auth error:', error);
+        showMessage(ERROR_TEXT[error.code] ?? 'Something went wrong. Please try again.', true);
+        button.disabled = false;
+        button.textContent = originalText;
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const signupForm = document.getElementById('signup-form');
-    const loginForm = document.getElementById('login-form');
-    const backButton = document.getElementById('back-button');
-    const showLoginLink = document.getElementById('show-login');
-    const showSignupLink = document.getElementById('show-signup');
+showLoginLink.addEventListener('click', event => {
+    event.preventDefault();
+    swapForms(true);
+});
 
-    if (backButton) {
-        backButton.addEventListener('click', () => {
-            window.location.href = 'index.html';
-        });
-    }
+showSignupLink.addEventListener('click', event => {
+    event.preventDefault();
+    swapForms(false);
+});
 
-    if (showLoginLink && signupForm && loginForm) {
-        showLoginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            signupForm.style.display = 'none';
-            loginForm.style.display = 'block';
-        });
-    }
+signupForm.addEventListener('submit', event => {
+    event.preventDefault();
+    submitAuth(signupForm, createUserWithEmailAndPassword, 'Creating account...');
+});
 
-    if (showSignupLink && loginForm && signupForm) {
-        showSignupLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginForm.style.display = 'none';
-            signupForm.style.display = 'block';
-        });
-    }
-
-    if (signupForm) {
-        signupForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            createUserWithEmailAndPassword(auth, email, password)
-                .then(() => {
-                    alert('User signed up successfully!');
-                    signupForm.reset();
-                    showSignOutButton(); // Add this line
-                    window.location.href = 'index.html';
-                })
-                .catch((error) => {
-                    alert(`Error signing up: ${error.message}`);
-                });
-        });
-    }
-
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            signInWithEmailAndPassword(auth, email, password)
-                .then(() => {
-                    alert('User logged in successfully!');
-                    loginForm.reset();
-                    showSignOutButton();
-                    window.location.href = 'index.html';
-                })
-                .catch((error) => {
-                    alert(`Error logging in: ${error.message}`);
-                });
-        });
-    }
+loginForm.addEventListener('submit', event => {
+    event.preventDefault();
+    submitAuth(loginForm, signInWithEmailAndPassword, 'Logging in...');
 });

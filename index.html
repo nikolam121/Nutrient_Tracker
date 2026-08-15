@@ -4,34 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calorie Tracker</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%232f8f5b'/><path d='M16 7c5 4.5 7 8.5 7 11.5a7 7 0 0 1-14 0C9 15.5 11 11.5 16 7z' fill='white'/></svg>">
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
-    <button id="login-signup" onclick="window.location.href='auth.html';">Login / Sign Up</button>
-    <button type="button" id="signout-btn" style="display:none;">Sign Out</button>
-
-    <form id="search-form">
-        <input type="text" id="search-input" placeholder="Enter food item..." autocomplete="off">
-        <input type="number" id="gram-input" placeholder="Enter amount in grams..." min="1">
-        <button type="submit">Add Food</button>
-    </form>
-    
-    <ul id="autocomplete-list" class="autocomplete-items"></ul>
-    
-    <div id="food-list">
-        <h3>Selected Foods</h3>
-        <ul id="selected-foods"></ul>
-        <div id="nutrient-summary">
-            <p>Total Calories: <span id="total-calories">0</span> kcal</p>
-            <p>Total Protein: <span id="total-protein">0</span> g</p>
-            <p>Total Fat: <span id="total-fat">0</span> g</p>
-            <p>Total Carbohydrates: <span id="total-carbs">0</span> g</p>
+    <header class="topbar">
+        <h1 class="topbar__title">Calorie Tracker</h1>
+        <div class="topbar__actions">
+            <span id="user-email" class="topbar__user" hidden></span>
+            <button type="button" id="login-signup" class="btn btn--ghost">Log in / Sign up</button>
+            <button type="button" id="signout-btn" class="btn btn--ghost" hidden>Sign out</button>
         </div>
-    </div>
-    
-    <div id="results"></div>
+    </header>
 
-    <script src="auth.js" type="module"></script> 
+    <main class="page">
+        <p id="guest-notice" class="notice" hidden>
+            You're not logged in, so entries are saved in this browser only.
+            <a href="auth.html">Log in</a> to move them to your account and sync across devices.
+        </p>
+
+        <section class="card">
+            <h2 class="card__title">Add food</h2>
+            <form id="search-form" class="search" autocomplete="off">
+                <div class="search__field">
+                    <label for="search-input">Food</label>
+                    <input type="text" id="search-input" placeholder="e.g. banana"
+                           role="combobox" aria-expanded="false" aria-controls="autocomplete-list"
+                           aria-autocomplete="list" required>
+                    <ul id="autocomplete-list" class="autocomplete" role="listbox" hidden></ul>
+                </div>
+                <div class="search__field search__field--narrow">
+                    <label for="gram-input">Amount (g)</label>
+                    <input type="number" id="gram-input" placeholder="100" min="1" step="any" required>
+                </div>
+                <button type="submit" id="add-btn" class="btn btn--primary">Add</button>
+            </form>
+            <p id="form-message" class="message" role="status" hidden></p>
+        </section>
+
+        <section class="card">
+            <h2 class="card__title">Today's totals</h2>
+            <div class="totals">
+                <div class="totals__item">
+                    <span class="totals__value" id="total-calories">0</span>
+                    <span class="totals__label">kcal</span>
+                </div>
+                <div class="totals__item">
+                    <span class="totals__value" id="total-protein">0</span>
+                    <span class="totals__label">g protein</span>
+                </div>
+                <div class="totals__item">
+                    <span class="totals__value" id="total-fat">0</span>
+                    <span class="totals__label">g fat</span>
+                </div>
+                <div class="totals__item">
+                    <span class="totals__value" id="total-carbs">0</span>
+                    <span class="totals__label">g carbs</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2 class="card__title">Logged food</h2>
+            <ul id="selected-foods" class="foods"></ul>
+            <p id="empty-state" class="empty">Nothing logged yet. Add a food above to get started.</p>
+        </section>
+    </main>
+
     <script src="main.js" type="module"></script>
 </body>
 </html>
